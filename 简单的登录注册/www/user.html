@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    用户:<input type="text" id="user"><br>
+    密码:<input type="password" id="pass"><br>
+    <input type="button" value="注册" id="reg_btn">
+    <input type="button" value="登录" id="login_btn">
+</body>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    var oTxtUser = document.getElementById('user');
+    var oTxtPass = document.getElementById('pass');
+    var oBtnReg = document.getElementById('reg_btn');
+    var oBtnLogin = document.getElementById('login_btn');
+
+    // 注册
+    oBtnReg.onclick = function() {
+        $.get(
+            "http://localhost:8089/user", 
+            {act:'reg',user:oTxtUser.value,pass:oTxtPass.value},
+            function(data){
+                data = JSON.parse(data);
+                alert(data.msg)
+            });
+    }
+
+    // 登录
+    oBtnLogin.onclick = function() {
+        $.get(
+            "http://localhost:8089/user", 
+            {act:'login',user:oTxtUser.value,pass:oTxtPass.value},
+          function(data){
+            alert(data.msg)
+          },'json');
+    }
+    
+</script>
+</html>
