@@ -1,0 +1,14 @@
+{
+  "name": "dwz_test",
+  "version": "1.0.0",
+  "description": "测试npm上传自己的包",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dwz_test"
+  ],
+  "author": "web_du",
+  "license": "ISC"
+}
