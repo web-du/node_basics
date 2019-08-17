@@ -1,0 +1,22 @@
+html
+    head
+        script
+            include a.js
+    body
+        //- 加个!号就不会转义 
+        div!=content
+        -var a = 1;
+        -if(a % 2 == 0)
+            div(style={background:"red"}) 偶数
+        -else
+            div(style={background:"blue"}) 奇数
+        case a
+            when 0
+                div aaa
+            when 1
+                div bbb
+            default 
+                |不靠谱
+        
+
+    
