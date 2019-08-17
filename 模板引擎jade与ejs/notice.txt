@@ -1,0 +1,14 @@
+模板引擎：生成页面
+jade-破坏式，侵入式，强依赖
+ejs-温和，非侵入式，弱依赖
+
+
+jade:
+1.根据缩进，规定层级
+2.属性放在()里面,逗号分隔
+
+属性
+script(src="a.js") => <script src="a.js"></script>
+
+内容
+a(href="www.baidu.com") 百度一下 => <a href="www.baidu.com">百度一下</a>
