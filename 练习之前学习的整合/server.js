@@ -6,8 +6,10 @@ const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 // 获取上传的post文件数据得用到multer中间件
 const multer = require('multer');
-const ejs = require('ejs');
-const jade = require('jade');
+// const ejs = require('ejs');
+// const jade = require('jade');
+// consolidate 起模板整合的作用,有了它不需要ejs与jade了
+const consolidate = require('consolidate');
 
 
 const server = express();
@@ -38,10 +40,19 @@ server.use(cookieSession({
 server.use(bodyParser.urlencoded({extended: false}));
 // .single('file'):只接受文件名为file的文件   .any:接受所有的文件数据
 server.use(objMulter.any());
-// 用户请求
-server.use('/',(req,res,next) => {
-    // get数据：req.query  post数据：req.body  cookie:req.cookies  session:req.session  req.files: 上传的文件数据数组
-    console.log(req.query,req.body,req.files,req.cookies,req.session)
+
+// 配置模板引擎
+//1.输出文件的类型
+server.set('view engine','html');
+//2.模板文件所放的目录
+server.set('views','./views');
+//3.你需要用哪种模板引擎
+server.engine('html',consolidate.ejs);
+
+// 接受用户请求
+server.get('/index',function(req,res){
+    // 先编译再向用户返回数据
+    res.render('1.ejs',{name:'dwz'});
 })
 
 //4.static数据
