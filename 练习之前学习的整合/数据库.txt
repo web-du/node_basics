@@ -1,0 +1,22 @@
+数据一般放在数据库里
+
+常见的数据库
+MySQL, Oracle, SQLServer, Access, db2, fox pro
+
+
+MySQL:
+优点:免费,适用与中小网站
+缺点:集群,容灾稍微弱一些
+
+Oracle:
+挺贵,适用大型应用,金融级
+优点:性能非常不错,集群,容灾非常强
+
+
+MySQL
+
+Server端:
+数据存在
+
+Client端
+管理工具
