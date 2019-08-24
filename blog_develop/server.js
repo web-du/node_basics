@@ -6,7 +6,7 @@ const bodyParser=require('body-parser');
 const multer=require('multer');
 const consolidate=require('consolidate');
 const mysql=require('mysql');
-
+const common = require('./libs/common');
 //连接池
 const db = mysql.createPool({host: 'localhost',user: 'root',password: '3893694364dwz',database: 'blog'});
 
@@ -35,19 +35,62 @@ server.set('views', './template');
 //哪种模板引擎
 server.engine('html', consolidate.ejs);
 
-//接收用户请求
-server.get('/', (req, res)=>{
+//接收用户请求（链式操作）
+server.get('/',(req,res,next) => {
   // //查询banner的东西
   db.query("SELECT * FROM banner_table", (err, data)=>{
     if(err){
-      console.log(err);
+      // console.log(err);
       res.status(500).send('database error').end();
     }else{
-      console.log(data);
-      res.render('index.ejs', {banners: data});
+      // console.log(data);
+      res.banners = data;
+      // 查询新闻列表
+      next();
+      // res.render('index.ejs', {banners: data});
     }
   });
 });
+server.get('/', (req, res,next)=>{
+  // 查询新闻列表
+  console.log(res.banners)
+  db.query('SELECT title,summary,ID FROM article_table',(err,data) => {
+    if(err){
+      res.status(500).send('database error').end();
+    }else{
+      res.news = data;
+      next();
+      // res.render('index.ejs', {banners: data});
+    }
+  })
+});
+
+server.get('/',(req,res) => {
+  res.render('index.ejs',{banners:res.banners,news:res.news});
+})
+
+
+server.get('/article',(req,res) => {
+  if (req.query.id) {
+    db.query(`SELECT * FROM article_table WHERE ID=${req.query.id}`,(err,data) => {
+      if (err) {
+        res.status(500).send('database error').end();
+      } else {
+        if (data.length == 0) {
+          res.status(404).send('您请求的资源不存在').end();
+        } else {
+          var articleData = data[0];
+          articleData.sDate = common.time2date(articleData.post_time);
+          articleData.content = articleData.content.replace(/^/gm,'<p>').replace(/$/gm,'</p>');
+          res.render('conText.ejs',{article_data:articleData});
+        }
+      }
+    })
+  } else {
+    res.status(404).send('您请求的资源不存在').end();
+  }
+  
+})
 
 
 
