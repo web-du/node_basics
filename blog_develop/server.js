@@ -72,20 +72,47 @@ server.get('/',(req,res) => {
 
 server.get('/article',(req,res) => {
   if (req.query.id) {
-    db.query(`SELECT * FROM article_table WHERE ID=${req.query.id}`,(err,data) => {
-      if (err) {
-        res.status(500).send('database error').end();
-      } else {
-        if (data.length == 0) {
-          res.status(404).send('您请求的资源不存在').end();
+    // 点赞
+    if (req.query.act == 'like') {
+      // 增加一个赞
+      db.query(`UPDATE article_table SET n_like = n_like + 1 WHERE ID=${req.query.id}`,(err) => {
+        if (err) {
+          res.status(500).send('database error').end();
         } else {
-          var articleData = data[0];
-          articleData.sDate = common.time2date(articleData.post_time);
-          articleData.content = articleData.content.replace(/^/gm,'<p>').replace(/$/gm,'</p>');
-          res.render('conText.ejs',{article_data:articleData});
+          // 显示文章
+          db.query(`SELECT * FROM article_table WHERE ID=${req.query.id}`,(err,data) => {
+            if (err) {
+              res.status(500).send('database error').end();
+            } else {
+              if (data.length == 0) {
+                res.status(404).send('您请求的资源不存在').end();
+              } else {
+                var articleData = data[0];
+                articleData.sDate = common.time2date(articleData.post_time);
+                articleData.content = articleData.content.replace(/^/gm,'<p>').replace(/$/gm,'</p>');
+                res.render('conText.ejs',{article_data:articleData});
+              }
+            }
+          })
         }
-      }
-    })
+      })
+    } else {
+      db.query(`SELECT * FROM article_table WHERE ID=${req.query.id}`,(err,data) => {
+        if (err) {
+          res.status(500).send('database error').end();
+        } else {
+          if (data.length == 0) {
+            res.status(404).send('您请求的资源不存在').end();
+          } else {
+            var articleData = data[0];
+            articleData.sDate = common.time2date(articleData.post_time);
+            articleData.content = articleData.content.replace(/^/gm,'<p>').replace(/$/gm,'</p>');
+            res.render('conText.ejs',{article_data:articleData});
+          }
+        }
+      })
+    }
+    
   } else {
     res.status(404).send('您请求的资源不存在').end();
   }
